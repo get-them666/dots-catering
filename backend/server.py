@@ -23,7 +23,9 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, EmailStr, Field
 import uvicorn
 
-app = FastAPI(title="Becks Catering API")
+application = FastAPI(title="Becks Catering API")
+
+app = application
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,12 +38,15 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 # Paths, uploads, env
 # ---------------------------------------------------------------------------
-BASE_DIR = Path(__file__).resolve().parent
+REPO_DIR = Path(__file__).resolve().parent.parent
+STATIC_DIR = REPO_DIR / "frontend" / "static"
+TEMPLATE_DIR = REPO_DIR / "frontend" / "templates"
+BASE_DIR = REPO_DIR
 UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
-app.mount("/static", StaticFiles(directory=BASE_DIR), name="static")
-templates = Jinja2Templates(directory=BASE_DIR / "templates")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+templates = Jinja2Templates(directory=TEMPLATE_DIR)
 
 
 def _load_dotenv(path: Path) -> None:
@@ -262,7 +267,7 @@ async def admin_logout():
 @app.get("/manifest.webmanifest")
 async def manifest():
     return FileResponse(
-        BASE_DIR / "manifest.webmanifest",
+        STATIC_DIR / "manifest.webmanifest",
         media_type="application/manifest+json",
     )
 
@@ -270,7 +275,7 @@ async def manifest():
 @app.get("/sw.js")
 async def service_worker():
     return FileResponse(
-        BASE_DIR / "sw.js",
+        STATIC_DIR / "sw.js",
         media_type="application/javascript",
         headers={"Cache-Control": "no-cache", "Service-Worker-Allowed": "/"},
     )
