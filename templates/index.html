@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Becks Catering — kitchy, artsy, unforgettable catering for weddings, birthdays, reunions & corporate events." />
+    <title>Becks Catering — You plan it, we plate it</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0f8a5f" />
+    <link rel="icon" href="/static/icon-192.png" />
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Becks Catering" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <div id="banner" class="banner" hidden></div>
+
+    <header>
+        <a href="#top" class="brand">🍽️ BECKS CATERING</a>
+        <nav class="topnav">
+            <a href="#quote">Get a Quote</a>
+            <a href="#venues">Venues</a>
+            <a href="#gallery">Past Events</a>
+            <a href="#testimonials">Reviews</a>
+        </nav>
+    </header>
+
+    <section id="top" class="hero">
+        <div class="hero-inner">
+            <div class="hero-plate" aria-hidden="true">
+                <span class="plate-ring"></span>
+                <span class="plate-food">🥗</span>
+            </div>
+            <h1>You plan it.<br />We plate it.</h1>
+            <p>Kitchy. Artsy. Unforgettable. Weddings, birthdays, reunions — Becks Catering brings the food so you can bring the party.</p>
+            <div class="hero-cta">
+                <a href="#quote" class="btn btn-big">Get Your Instant Quote →</a>
+                <a href="#gallery" class="btn btn-ghost">See the Receipts 📸</a>
+            </div>
+            <p class="hero-note">🍀 Real greens. Real food. Real fast quotes.</p>
+        </div>
+    </section>
+
+    <main>
+        <section id="quote">
+            <h2>✨ Get Your Quote in 60 Seconds</h2>
+            <p class="lede">Three quick steps — no PDF menus, no phone tag. We'll send a real number.</p>
+
+            <ol class="wizard-steps" id="wizardSteps">
+                <li class="active" data-i="1">When & What</li>
+                <li data-i="2">How Many & Style</li>
+                <li data-i="3">Your Details</li>
+            </ol>
+            <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+
+            <form id="quoteForm">
+                <fieldset class="step" data-step="1">
+                    <legend>When's the party? 🎊</legend>
+                    <label>Your date
+                        <input type="date" name="event_date" required />
+                    </label>
+                    <div id="availability" class="avail"></div>
+                    <div id="weatherBox" class="weather" aria-live="polite"></div>
+                    <button type="button" id="yearBtn">Peek the full year ☀️</button>
+                    <div id="yearGrid" class="year-grid" hidden></div>
+                    <label>What are we celebrating?
+                        <select name="event_type" required>
+                            <option value="">Pick one…</option>
+                            <option value="Wedding">Wedding 💍</option>
+                            <option value="Birthday">Birthday 🎂</option>
+                            <option value="Reunion">Reunion 🤝</option>
+                            <option value="Corporate">Corporate 💼</option>
+                            <option value="Other">Other 🎉</option>
+                        </select>
+                    </label>
+                    <div class="step-nav">
+                        <button type="button" class="next-btn">Next →</button>
+                    </div>
+                </fieldset>
+
+                <fieldset class="step" data-step="2" hidden>
+                    <legend>How big, and how fancy? 👨‍🍳</legend>
+                    <label>Number of guests
+                        <input type="number" name="guests" min="1" placeholder="e.g. 120" required />
+                    </label>
+                    <label>Service style
+                        <select name="service_style" required>
+                            <option value="">Pick one…</option>
+                            <option value="Drop-off Buffet">Drop-off Buffet</option>
+                            <option value="Family-Style">Family-Style</option>
+                            <option value="Cocktail Stations">Cocktail Stations</option>
+                            <option value="Plated Dinner">Plated Dinner</option>
+                        </select>
+                    </label>
+                    <div id="estimateBox" class="estimate">
+                        Pick a guest count & style for a live ballpark.
+                    </div>
+                    <div class="step-nav">
+                        <button type="button" class="prev-btn">← Back</button>
+                        <button type="button" class="next-btn">Next →</button>
+                    </div>
+                </fieldset>
+
+                <fieldset class="step" data-step="3" hidden>
+                    <legend>You, brave host ✍️</legend>
+                    <label>Name
+                        <input type="text" name="name" placeholder="Rosa Parks Catering Co." required />
+                    </label>
+                    <label>Email
+                        <input type="email" name="email" placeholder="you@example.com" required />
+                    </label>
+                    <label>Phone
+                        <input type="tel" name="phone" placeholder="+1-555-123-4567" required />
+                    </label>
+                    <label>Dietary needs / details
+                        <textarea name="details" placeholder="Vegan, gluten-free, a table shaped like a taco…"></textarea>
+                    </label>
+                    <div class="step-nav">
+                        <button type="button" class="prev-btn">← Back</button>
+                        <button type="submit">Send My Quote Request 🌿</button>
+                    </div>
+                </fieldset>
+            </form>
+            <div id="quoteResult"></div>
+        </section>
+
+        <section id="testimonials">
+            <h2>⭐ People Keep Coming Back</h2>
+            <div class="review-grid">
+                <div class="review">
+                    <p>“Becks catered our wedding and my aunt still brings up the harissa carrots. ART.”</p>
+                    <span>— Maya & Tom, Wedding '25 · 140 guests</span>
+                </div>
+                <div class="review">
+                    <p>“We hired them for a 300-person company party. Zero panic, all flavor. New annual tradition.”</p>
+                    <span>— Devin R., Corporate Prod Launch</span>
+                </div>
+                <div class="review">
+                    <p>“Family reunion fit for a cookout royalty. The green goddess bowl was a whole mood.”</p>
+                    <span>— Auntie Celeste, 40-person Reunion</span>
+                </div>
+            </div>
+            <a class="btn btn-ghost" href="https://www.google.com/maps/search/Becks+Catering" target="_blank" rel="noopener">See us on Google Maps ✳️</a>
+        </section>
+
+        <section id="venues">
+            <h2>📍 Venues We Work With</h2>
+            <p class="lede">Home base: Virginia Beach. We'll drive 120 miles for a good party — here are the spots we know are worth it.</p>
+            <div id="venuesGrid" class="venues-grid"></div>
+        </section>
+
+        <section id="gallery">
+            <h2>📸 Past Events — Proof We Popped Off</h2>
+            <p class="lede">Real events, real guest counts. If our past doesn't look fun, our future isn't yours.</p>
+            <div id="galleryGrid"></div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>🍽️ Becks Catering — You plan it, we plate it.</p>
+        <p class="muted">Serving Virginia Beach & everything within 120 miles · Booking inquiries: hello@beckscatering.com</p>
+        <nav class="footlinks">
+            <a href="#venues">Venues</a>
+            <a href="/admin">Staff</a>
+            <a href="/crew">Crew App</a>
+        </nav>
+    </footer>
+
+    <a href="#quote" class="mobile-cta">💬 Get a Quote</a>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

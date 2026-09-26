@@ -1,0 +1,5 @@
+fastapi[all]
+uvicorn
+pydantic
+python-multipart
+stripe>=15.4.0

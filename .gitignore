@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+becks.db
+becks.db-wal
+becks.db-shm
+.env
+private.pem
+uploads/
+.DS_Store

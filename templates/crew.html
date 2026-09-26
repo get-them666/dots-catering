@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Becks Crew</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0f8a5f" />
+    <link rel="icon" href="/static/icon-192.png" />
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Becks Crew" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="crew-body">
+    <header class="crew-header">
+        <span class="brand">🍽️ Becks Crew</span>
+        <a href="/" class="crew-link">Full site ↗</a>
+    </header>
+
+    <main class="crew-main">
+        <button id="installBtn" class="btn btn-big install-btn" hidden>📲 Install the Crew App</button>
+        <div id="crewBanner" class="banner banner-warn" hidden></div>
+
+        <section class="crew-card">
+            <h2>🕒 Shifts</h2>
+            <div id="shiftList" class="shift-list"><p class="muted">Loading…</p></div>
+        </section>
+
+        <section class="crew-card crew-chat">
+            <h2>💬 Crew Chat</h2>
+            <div id="chatLog" class="chat-log"></div>
+            <div class="chat-row">
+                <input type="text" id="chatInput" placeholder="Type a message..." />
+                <button id="sendBtn">Send</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/crew.js"></script>
+</body>
+</html>

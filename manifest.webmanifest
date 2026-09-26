@@ -1,0 +1,16 @@
+{
+  "name": "Becks Catering — Crew",
+  "short_name": "Becks Crew",
+  "description": "Crew schedule, shifts, and chat for Becks Catering.",
+  "start_url": "/crew",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#edf8f1",
+  "theme_color": "#0f8a5f",
+  "icons": [
+    { "src": "/static/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/static/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/static/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

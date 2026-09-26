@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Becks Staff — Back Office</title>
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body class="admin-body">
+    <header class="admin-header">
+        <span class="brand">🍽️ BECKS — STAFF</span>
+        <nav class="topnav">
+            <a href="/">Public site ↗</a>
+            <a href="/crew">Crew app ↗</a>
+            <form method="post" action="/admin/logout"><button type="submit" class="linklike">Log out</button></form>
+        </nav>
+    </header>
+
+    <main class="admin-main">
+
+        <section id="leads">
+            <h2>📥 Quote Requests</h2>
+            <div id="leadsList"></div>
+        </section>
+
+        <section id="price-list">
+            <h2>🥬 Market Prices</h2>
+            <ul id="prices" class="price-list"></ul>
+            <p id="priceMeta" class="price-meta"></p>
+        </section>
+
+        <section id="calendar">
+            <h2>📅 Team Calendar</h2>
+            <div class="cal-nav">
+                <button type="button" id="calPrev">← Prev</button>
+                <strong id="calLabel"></strong>
+                <button type="button" id="calNext">Next →</button>
+            </div>
+            <div id="calGrid" class="cal-grid"></div>
+            <h3>Add a shift</h3>
+            <form id="eventForm" class="row-form">
+                <label>Title: <input type="text" name="title" required /></label>
+                <label>Start: <input type="datetime-local" name="start" required /></label>
+                <label>End: <input type="datetime-local" name="end" required /></label>
+                <label>Assign:
+                    <select name="employee_id" id="evEmp">
+                        <option value="">— none —</option>
+                    </select>
+                </label>
+                <button type="submit">Add Shift</button>
+            </form>
+            <h3>Assign crew to an event</h3>
+            <form id="assignForm" class="row-form">
+                <label>Event:
+                    <select id="assignEvent" required><option value="">— pick event —</option></select>
+                </label>
+                <label>Crew:
+                    <select id="assignEmployee" required><option value="">— pick crew —</option></select>
+                </label>
+                <button type="submit">Assign</button>
+            </form>
+            <div id="eventList"></div>
+        </section>
+
+        <section id="bookings">
+            <h2>📝 Confirmed Bookings</h2>
+            <form id="bookingForm" class="row-form">
+                <label>Name: <input type="text" name="name" required /></label>
+                <label>Email: <input type="email" name="email" required /></label>
+                <label>Phone: <input type="tel" name="phone" /></label>
+                <label>Type:
+                    <select name="event_type">
+                        <option value="Wedding">Wedding</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="Reunion">Reunion</option>
+                        <option value="Corporate">Corporate</option>
+                    </select>
+                </label>
+                <label>Date: <input type="date" name="event_date" required /></label>
+                <label>Time: <input type="time" name="event_time" value="17:00" /></label>
+                <label>Guests: <input type="number" name="guests" min="1" required /></label>
+                <label>Price ($): <input type="number" name="price" step="0.01" value="0" /></label>
+                <button type="submit">Confirm Booking</button>
+            </form>
+            <div id="bookingResult"></div>
+            <div id="bookingList"></div>
+        </section>
+
+        <section id="employees">
+            <h2>👨‍🍳 Crew</h2>
+            <form id="employeeForm" class="row-form">
+                <label>Name: <input type="text" name="name" required /></label>
+                <label>Role: <input type="text" name="role" required /></label>
+                <label>Phone: <input type="tel" name="phone" /></label>
+                <label>Hourly Rate ($): <input type="number" name="hourly_rate" step="0.01" min="0.01" required /></label>
+                <button type="submit">Add Crew</button>
+            </form>
+            <div id="employeeList"></div>
+        </section>
+
+        <section id="payroll">
+            <h2>💸 Payroll</h2>
+            <table>
+                <thead>
+                    <tr><th>Crew</th><th>Role</th><th>Hours</th><th>Rate</th><th>Gross</th></tr>
+                </thead>
+                <tbody id="payrollBody"></tbody>
+            </table>
+        </section>
+
+        <section id="accounting">
+            <h2>📊 Books</h2>
+            <div id="acctCards" class="cards"></div>
+        </section>
+
+        <section id="gallery">
+            <h2>📸 Gallery / Past Events</h2>
+            <form id="galleryForm" class="row-form">
+                <label>Event Name: <input type="text" id="gEventName" required placeholder="Smith Wedding '25" /></label>
+                <label>Date: <input type="date" id="gEventDate" /></label>
+                <label>Guest Count: <input type="number" id="gGuestCount" min="1" placeholder="e.g. 150" /></label>
+                <label>Photos: <input type="file" id="gFiles" multiple accept="image/*" /></label>
+                <button type="submit">Upload Photos</button>
+            </form>
+            <div id="galleryResult"></div>
+            <div id="galleryGrid"></div>
+        </section>
+
+        <section id="venues">
+            <h2>📍 Venue Directory</h2>
+            <form id="venueForm" class="row-form">
+                <label>Name: <input type="text" name="name" placeholder="e.g. The Waterfront Barn" required /></label>
+                <label>Area: <input type="text" name="area" placeholder="e.g. Virginia Beach / Norfolk" /></label>
+                <label>Type: <input type="text" name="venue_type" placeholder="e.g. Barn, Rooftop, Waterfront" /></label>
+                <label>Capacity: <input type="number" name="capacity" min="1" /></label>
+                <label>Price Range: <input type="text" name="price_range" placeholder="e.g. $3k–$8k" /></label>
+                <label>Contact Name: <input type="text" name="contact_name" /></label>
+                <label>Contact Email: <input type="email" name="contact_email" /></label>
+                <label>Phone: <input type="tel" name="contact_phone" /></label>
+                <label>Website: <input type="url" name="website" /></label>
+                <label>Notes: <input type="text" name="notes" /></label>
+                <button type="submit" id="venueSubmitBtn">Add Venue</button>
+            </form>
+            <button type="button" id="venueCancelEdit" hidden>Cancel edit</button>
+            <div id="venueList"></div>
+        </section>
+
+        <section id="staff-chat">
+            <h2>💬 Crew Chat</h2>
+            <div id="chatLog" class="chat-log"></div>
+            <div class="chat-row">
+                <input type="text" id="chatInput" placeholder="Type a message..." />
+                <button id="sendBtn">Send</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="/static/admin.js"></script>
+</body>
+</html>
