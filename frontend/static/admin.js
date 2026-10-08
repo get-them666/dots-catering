@@ -111,14 +111,15 @@ function empName(id) {
 }
 
 function reloadAll() {
-  loadLeads();
-  loadEmployees();
-  loadEvents();
-  loadBookings();
-  loadPayroll();
-  loadAccounting();
-  loadGallery();
-  loadVenues();
+  // Each loader is independent — one failing endpoint must not take the
+  // rest of the back office down with it.
+  const safe = (p) => p.catch((err) => console.error("reload failed:", err));
+  Promise.all([loadLeads(), loadEmployees(), loadPrices()].map(safe)).then(() =>
+    Promise.all([
+      loadEvents(), loadBookings(), loadPayroll(),
+      loadAccounting(), loadGallery(), loadVenues(),
+    ].map(safe))
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -183,6 +184,16 @@ const calGrid = document.getElementById("calGrid");
 
 function dateKey(ev) {
   return (ev.start || "").slice(0, 10);
+}
+
+async function loadEvents() {
+  try {
+    eventsData = await api("/events");
+    renderCalendar();
+  } catch (err) {
+    const el = document.getElementById("eventList");
+    if (el) el.innerHTML = "<p>Calendar error: " + err.message + "</p>";
+  }
 }
 
 function renderCalendar() {
