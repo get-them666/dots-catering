@@ -84,35 +84,31 @@ async function loadShifts() {
 }
 
 // ---------------------------------------------------------------------------
-// Crew chat
+// Crew chat — shared module (chat.js); thread is persisted server-side
 // ---------------------------------------------------------------------------
 const chatLog = document.getElementById("chatLog");
 const chatInput = document.getElementById("chatInput");
 const sendBtn = document.getElementById("sendBtn");
-let ws;
 
-function initWebSocket() {
-  const proto = location.protocol === "https:" ? "wss://" : "ws://";
-  ws = new WebSocket(proto + location.host + "/ws");
-  ws.onmessage = (event) => {
-    const msg = document.createElement("div");
-    msg.textContent = event.data;
-    chatLog.appendChild(msg);
-    chatLog.scrollTop = chatLog.scrollHeight;
-  };
-  ws.onclose = () => setTimeout(initWebSocket, 2000);
-}
-initWebSocket();
-
-sendBtn.addEventListener("click", () => {
-  const text = chatInput.value.trim();
-  if (text && ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(text);
-    chatInput.value = "";
+function crewChatName() {
+  let n = localStorage.getItem("dots_chat_name");
+  if (!n) {
+    try {
+      n = (prompt("What's your name for the crew chat?", "") || "").trim();
+    } catch (_) {
+      n = "";
+    }
+    n = n.slice(0, 40) || "Crew";
+    localStorage.setItem("dots_chat_name", n);
   }
-});
-chatInput.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") { e.preventDefault(); sendBtn.click(); }
+  return n;
+}
+
+initDotsChat({
+  name: crewChatName,
+  logEl: chatLog,
+  inputEl: chatInput,
+  sendEl: sendBtn,
 });
 
 // ---------------------------------------------------------------------------

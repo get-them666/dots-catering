@@ -182,6 +182,12 @@ CREATE TABLE IF NOT EXISTS price_meta (
   source TEXT NOT NULL DEFAULT 'sample',
   updated TEXT, fetched_at REAL NOT NULL DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS chat_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  body TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
 """
 
 
@@ -963,23 +969,86 @@ class ConnectionManager:
         self.active_connections.append(websocket)
 
     def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
 
     async def broadcast(self, message: str):
-        for connection in self.active_connections:
-            await connection.send_text(message)
+        # One dead socket must not break chat for everyone else.
+        for connection in list(self.active_connections):
+            try:
+                await connection.send_text(message)
+            except Exception:
+                self.disconnect(connection)
 
 
 manager = ConnectionManager()
+
+
+@app.get("/chat", response_model=List[Dict])
+async def chat_history(limit: int = 200):
+    """Persisted crew chat — oldest first, for clients that want a REST pull."""
+    limit = max(1, min(int(limit), 500))
+    rows = _query(
+        "SELECT id, name, body, created_at FROM chat_messages ORDER BY id DESC LIMIT ?",
+        (limit,),
+    )
+    rows.reverse()
+    return [
+        {"id": m["id"], "name": m["name"], "text": m["body"], "at": m["created_at"]}
+        for m in rows
+    ]
+
+
+CHAT_MAX_LEN = 2000
 
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
+        # On connect, hand back the stored thread so refreshes keep history.
+        history = _query(
+            "SELECT id, name, body, created_at FROM chat_messages ORDER BY id DESC LIMIT 200"
+        )
+        history.reverse()
+        await websocket.send_text(
+            json.dumps(
+                {
+                    "type": "history",
+                    "messages": [
+                        {
+                            "id": m["id"],
+                            "name": m["name"],
+                            "text": m["body"],
+                            "at": m["created_at"],
+                        }
+                        for m in history
+                    ],
+                }
+            )
+        )
         while True:
-            data = await websocket.receive_text()
-            await manager.broadcast(data)
+            raw = await websocket.receive_text()
+            name, text = "Crew", raw
+            try:
+                payload = json.loads(raw)
+                if isinstance(payload, dict):
+                    text = str(payload.get("text") or "")
+                    name = str(payload.get("name") or "Crew")
+            except (json.JSONDecodeError, TypeError):
+                pass
+            text = text.strip()[:CHAT_MAX_LEN]
+            if not text:
+                continue
+            name = name.strip()[:40] or "Crew"
+            at = datetime.utcnow().isoformat(timespec="seconds") + "Z"
+            msg_id = _exec(
+                "INSERT INTO chat_messages (name, body, created_at) VALUES (?, ?, ?)",
+                (name, text, at),
+            )
+            await manager.broadcast(
+                json.dumps({"type": "msg", "id": msg_id, "name": name, "text": text, "at": at})
+            )
     except WebSocketDisconnect:
         manager.disconnect(websocket)
 
