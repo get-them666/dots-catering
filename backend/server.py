@@ -1088,21 +1088,30 @@ async def create_checkout(req: CheckoutRequest, request: Request):
     deposit = round(price * DEPOSIT_RATIO, 2)
     rand = "".join(secrets.choice(string.ascii_lowercase) for _ in range(8))
     base = str(request.base_url).rstrip("/")
-    session = stripe.checkout.sessions.create(
-        mode="payment",
-        line_items=[{
-            "quantity": 1,
-            "price_data": {
-                "currency": "usd",
-                "unit_amount": int(round(deposit * 100)),
-                "product_data": {"name": f"{bk['name']} — {bk['event_type']} deposit"},
-            },
-        }],
-        metadata={"booking_id": str(bk["id"])},
-        success_url=f"{base}/?deposit=success&session_id={{CHECKOUT_SESSION_ID}}",
-        cancel_url=f"{base}/?deposit=cancelled",
-        integration_identifier=f"dots-deposit-{rand}",
-    )
+    try:
+        session = stripe.checkout.sessions.create(
+            mode="payment",
+            line_items=[{
+                "quantity": 1,
+                "price_data": {
+                    "currency": "usd",
+                    "unit_amount": int(round(deposit * 100)),
+                    "product_data": {"name": f"{bk['name']} — {bk['event_type']} deposit"},
+                },
+            }],
+            metadata={"booking_id": str(bk["id"])},
+            success_url=f"{base}/?deposit=success&session_id={{CHECKOUT_SESSION_ID}}",
+            cancel_url=f"{base}/?deposit=cancelled",
+            integration_identifier=f"dots-deposit-{rand}",
+        )
+    except Exception as exc:
+        print(f"Stripe checkout error: {exc!r}")
+        raise HTTPException(
+            status_code=502,
+            detail="Stripe payment is temporarily unavailable — check STRIPE_SECRET_KEY",
+        )
+    if not getattr(session, "url", None):
+        raise HTTPException(status_code=502, detail="Stripe did not return a checkout link")
     return {"url": session.url, "deposit": deposit}
 
 
@@ -1119,9 +1128,10 @@ async def stripe_webhook(request: Request):
             raise HTTPException(status_code=400, detail="Invalid signature")
     else:
         event = json.loads(payload)
+    # Fulfillment only on confirmed payment — never while unpaid or processing.
     if event.get("type") in ("checkout.session.completed", "checkout.session.async_payment_succeeded"):
         session = event["data"]["object"]
-        if session.get("payment_status") != "unpaid":
+        if session.get("payment_status") in ("paid", "no_payment_required"):
             bid = int(session.get("metadata", {}).get("booking_id", -1))
             bk = _query("SELECT * FROM bookings WHERE id = ?", (bid,), one=True)
             if bk:

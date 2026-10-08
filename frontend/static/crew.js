@@ -12,7 +12,9 @@ async function api(path) {
 // ---------------------------------------------------------------------------
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
+    // Keep offline caching contained to the crew app: with a /crew/ scope the
+    // service worker can never serve stale public-site assets.
+    navigator.serviceWorker.register("/sw.js", { scope: "/crew/" }).catch(() => {});
   });
 }
 

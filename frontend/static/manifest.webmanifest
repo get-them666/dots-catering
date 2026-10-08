@@ -3,7 +3,7 @@
   "short_name": "Dots Crew",
   "description": "Crew schedule, shifts, and chat for Dots Catering.",
   "start_url": "/crew",
-  "scope": "/",
+  "scope": "/crew/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#edf8f1",

@@ -1,5 +1,5 @@
 // Dots Catering service worker — installable app shell + offline fallback
-const CACHE = "dots-v2";
+const CACHE = "dots-v3";
 const SHELL = [
   "/",
   "/crew",

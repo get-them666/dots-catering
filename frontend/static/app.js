@@ -282,8 +282,17 @@ async function showDepositBanner() {
 // Installable app (PWA)
 // ---------------------------------------------------------------------------
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  // The crew PWA owns the service worker (scoped to /crew/). The public site
+  // never registers it — cache-first static would mask site updates for
+  // visitors (stale CSS/JS after every launch). On load, sweep away any
+  // legacy root-scoped registration so old installs stop serving old files.
+  window.addEventListener("load", async () => {
+    try {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(
+        regs.filter((r) => !(r.scope || "").includes("/crew/")).map((r) => r.unregister())
+      );
+    } catch (_) {}
   });
 }
 
