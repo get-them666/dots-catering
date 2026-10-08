@@ -23,7 +23,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, EmailStr, Field
 import uvicorn
 
-application = FastAPI(title="Becks Catering API")
+application = FastAPI(title="Dots Catering API")
 
 app = application
 
@@ -79,7 +79,7 @@ if not ADMIN_PASSWORD:
     print("    Put ADMIN_PASSWORD=... in .env for a stable staff password.")
 
 SIGNED_SECRET = os.environ.get("SIGNED_SECRET") or secrets.token_hex(32)
-SESSION_COOKIE = "becks_session"
+SESSION_COOKIE = "dots_session"
 
 
 def _session_token() -> str:
@@ -118,7 +118,7 @@ def require_admin(request: Request):
 # ---------------------------------------------------------------------------
 # Database (SQLite, stdlib only — survives restarts)
 # ---------------------------------------------------------------------------
-DB_PATH = BASE_DIR / "becks.db"
+DB_PATH = BASE_DIR / "dots.db"
 _db_conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 _db_conn.row_factory = sqlite3.Row
 _db_conn.execute("PRAGMA journal_mode=WAL;")
@@ -1032,7 +1032,7 @@ async def create_checkout(req: CheckoutRequest, request: Request):
         metadata={"booking_id": str(bk["id"])},
         success_url=f"{base}/?deposit=success&session_id={{CHECKOUT_SESSION_ID}}",
         cancel_url=f"{base}/?deposit=cancelled",
-        integration_identifier=f"becks-deposit-{rand}",
+        integration_identifier=f"dots-deposit-{rand}",
     )
     return {"url": session.url, "deposit": deposit}
 

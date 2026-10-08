@@ -1,7 +1,7 @@
 {
-  "name": "Becks Catering — Crew",
-  "short_name": "Becks Crew",
-  "description": "Crew schedule, shifts, and chat for Becks Catering.",
+  "name": "Dots Catering — Crew",
+  "short_name": "Dots Crew",
+  "description": "Crew schedule, shifts, and chat for Dots Catering.",
   "start_url": "/crew",
   "scope": "/",
   "display": "standalone",

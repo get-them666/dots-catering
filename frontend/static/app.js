@@ -1,4 +1,4 @@
-// Becks Catering — public site (quote wizard + gallery + deposit banner)
+// Dots Catering — public site (quote wizard + gallery + deposit banner)
 const API = ""; // served same-origin by FastAPI
 
 async function api(path, options = {}) {

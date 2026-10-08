@@ -1,5 +1,5 @@
-// Becks Catering service worker — installable app shell + offline fallback
-const CACHE = "becks-v1";
+// Dots Catering service worker — installable app shell + offline fallback
+const CACHE = "dots-v1";
 const SHELL = [
   "/",
   "/crew",

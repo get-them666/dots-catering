@@ -1,4 +1,4 @@
-// Becks Catering — Crew app (installable PWA): shifts + live chat
+// Dots Catering — Crew app (installable PWA): shifts + live chat
 const API = "";
 
 async function api(path) {

@@ -1,4 +1,4 @@
-// Becks Catering — staff back office
+// Dots Catering — staff back office
 const API = ""; // served same-origin by FastAPI
 
 async function api(path, options = {}) {
